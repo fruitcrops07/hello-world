@@ -38,7 +38,7 @@ public class PeopleResource {
             if (StringUtils.isEmpty(personRequest.getFirstName()) || StringUtils.isEmpty(personRequest.getLastName())
                 || StringUtils.isEmpty(personRequest.getBirthDate()))
                 return Response.status(HttpServletResponse.SC_BAD_REQUEST) //
-                               .entity(new Object())
+                               .entity(new MessageResponse(HttpServletResponse.SC_BAD_REQUEST, "Invalid Request Body"))
                                .build();
 
             final Person person = new Person(personRequest.getFirstName(), //
@@ -48,7 +48,7 @@ public class PeopleResource {
             return Response.status(HttpServletResponse.SC_CREATED).entity(people).build();
         } catch (InvalidDateformatException | ParseException e) {
             return Response.status(HttpServletResponse.SC_BAD_REQUEST) //
-                           .entity(new Object())
+                           .entity(new MessageResponse(HttpServletResponse.SC_BAD_REQUEST, "Invalid format for birthDate"))
                            .build();
         }
 

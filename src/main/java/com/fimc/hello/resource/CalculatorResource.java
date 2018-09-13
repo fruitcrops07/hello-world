@@ -24,7 +24,9 @@ public class CalculatorResource {
         try {
             if (StringUtils.isEmpty(calculationRequest.getOperator()) || calculationRequest.getNumber1() == null
                 || calculationRequest.getNumber2() == null)
-                return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new Object()).build();
+                return Response.status(HttpServletResponse.SC_BAD_REQUEST) //
+                               .entity(new MessageResponse(HttpServletResponse.SC_BAD_REQUEST, "Invalid Request Body"))
+                               .build();
 
             final CalculationResponse result = new CalculationResponse();
             result.setResult(Calculator.calculate(calculationRequest.getOperator(), //
@@ -32,8 +34,14 @@ public class CalculatorResource {
                                                   calculationRequest.getNumber2()));
             result.setAction(Calculator.translateOperator(calculationRequest.getOperator()));
             return Response.ok().status(HttpServletResponse.SC_OK).entity(result).build();
-        } catch (DivisionOfZeroException | InvalidOperatorException e) {
-            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(new Object()).build();
+        } catch (DivisionOfZeroException e) {
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST) //
+                           .entity(new MessageResponse(HttpServletResponse.SC_BAD_REQUEST, "Division of Zero is invalid"))
+                           .build();
+        } catch (InvalidOperatorException e) {
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST) //
+                           .entity(new MessageResponse(HttpServletResponse.SC_BAD_REQUEST, "Invalid Operation"))
+                           .build();
         }
     }
 
